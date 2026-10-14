@@ -29,8 +29,7 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 8e216bebd050811f3a6223515284c132
-          command: pages deploy dist --project-name=nashik-properties-15 --branch=master
+        run: npx wrangler@3 pages deploy dist --project-name=nashik-properties-15 --branch=master --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 8e216bebd050811f3a6223515284c132
