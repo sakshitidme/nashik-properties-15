@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-// import { PROPERTIES, NASHIK_LOCATIONS } from '../data/mockData';
-import { get } from '../services/api';
-import { NASHIK_LOCATIONS } from '../data/mockData';
+import { PROPERTIES, NASHIK_LOCATIONS } from '../data/mockData';
 import { PropertyCard } from '../components/cards/PropertyCard';
 import { Search, Filter, Grid, List, SlidersHorizontal, RotateCcw, CheckCircle2 } from 'lucide-react';
 
@@ -12,16 +10,10 @@ export const BuyPropertiesPage = () => {
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(null);
 
+  // Load properties from mock data (PDF-derived)
   useEffect(() => {
-    get('/api/properties')
-      .then((data) => {
-        setProperties(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setApiError(err.message);
-        setLoading(false);
-      });
+    setProperties(PROPERTIES);
+    setLoading(false);
   }, []);
 
 

@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { get } from '../services/api';
+import React, { useState, useMemo } from 'react';
+import { PROPERTIES, NASHIK_LOCATIONS } from '../data/mockData';
 import { PropertyCard } from '../components/cards/PropertyCard';
-import { Map, TreePine, Fence, Home, Loader2 } from 'lucide-react';
+import { Map, TreePine, Fence, Home } from 'lucide-react';
 
 export const PlotsLandPage = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [apiError, setApiError] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
-  useEffect(() => {
-    get('/api/properties?category=plots')
-      .then((data) => {
-        setProperties(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setApiError(err.message);
-        setLoading(false);
-      });
-  }, []);
+  const allPlots = PROPERTIES.filter((p) => p.category === 'plots');
+
+  const filteredPlots = useMemo(() => {
+    return allPlots.filter((p) => {
+      if (selectedLocation && p.location.toLowerCase() !== selectedLocation.toLowerCase()) return false;
+      if (selectedType && p.type.toLowerCase() !== selectedType.toLowerCase()) return false;
+      return true;
+    });
+  }, [allPlots, selectedLocation, selectedType]);
 
   const PLOT_TYPES = [
     { title: 'Residential Plots', desc: 'NMC & Collector Sanctioned NA plots with 1.5 FSI', icon: <Home className="w-5 h-5 text-amber-400" /> },
@@ -31,17 +28,17 @@ export const PlotsLandPage = () => {
     <div className="pt-28 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       <div className="space-y-3">
         <span className="text-xs font-extrabold uppercase tracking-widest text-amber-400">
-          Land & Plot Investments
+          Land &amp; Plot Investments
         </span>
         <h1 className="text-3xl sm:text-5xl font-heading font-extrabold text-white">
-          NA Plots & <span className="gold-gradient-text">Agricultural Land</span>
+          NA Plots &amp; <span className="gold-gradient-text">Agricultural Land</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-          Sanctioned non-agricultural (NA) plots, gated bungalow layouts, and hilltop farm land across Makhmalabad, Trimbak Road & Pathardi.
+          Sanctioned non-agricultural (NA) plots, gated bungalow layouts, and hilltop farm land across Makhmalabad, Trimbak Road &amp; Pathardi.
         </p>
       </div>
 
-      {/* Plot type cards — static, no backend API needed */}
+      {/* Plot type cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {PLOT_TYPES.map((type, idx) => (
           <div key={idx} className="glass-panel p-6 rounded-3xl border border-white/10 space-y-3 hover:border-amber-400 transition-all">
@@ -54,30 +51,43 @@ export const PlotsLandPage = () => {
         ))}
       </div>
 
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-white">Featured Plot Listings</h2>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <select
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+          className="bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+        >
+          <option value="">All Localities</option>
+          {NASHIK_LOCATIONS.map((loc) => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
+        </select>
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          className="bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+        >
+          <option value="">All Plot Types</option>
+          <option value="Plots">NA Plots</option>
+          <option value="Agricultural Land">Agricultural Land</option>
+          <option value="Farmhouse">Farmhouse Land</option>
+        </select>
+      </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center min-h-[200px]">
-            <div className="text-center space-y-3">
-              <Loader2 className="w-10 h-10 text-amber-400 animate-spin mx-auto" />
-              <p className="text-slate-300 text-sm">Loading plot listings…</p>
-            </div>
-          </div>
-        ) : apiError ? (
-          <div className="glass-panel rounded-3xl p-10 text-center border border-white/10 space-y-3">
-            <p className="text-red-400 text-sm font-medium">Error loading plots</p>
-            <p className="text-slate-400 text-xs">{apiError}</p>
-          </div>
-        ) : properties.length === 0 ? (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">
+          Featured Plot Listings
+          <span className="ml-3 text-sm font-normal text-amber-400">({filteredPlots.length} listings)</span>
+        </h2>
+
+        {filteredPlots.length === 0 ? (
           <div className="glass-panel rounded-3xl p-12 text-center border border-white/10 space-y-3">
-            <h3 className="text-xl font-bold text-white">No Plot Listings Yet</h3>
+            <h3 className="text-xl font-bold text-white">No Plot Listings Found</h3>
             <p className="text-xs text-slate-400">Contact our land advisory team to enquire about available plots.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties.map((prop) => (
-              <PropertyCard key={prop._id || prop.id} property={prop} />
+            {filteredPlots.map((prop) => (
+              <PropertyCard key={prop.id} property={prop} />
             ))}
           </div>
         )}
