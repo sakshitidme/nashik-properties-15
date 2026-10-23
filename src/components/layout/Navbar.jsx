@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logoImg from '../../assets/logo.jpeg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { Heart, PlusCircle, User, Menu, X, Building, Search, Scale } from 'lucide-react';
@@ -48,7 +49,7 @@ export const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-105 transition-all bg-slate-950 border border-amber-500/40 p-0.5">
-            <img src="/favicon.svg" alt="Nashik Property Logo" className="w-full h-full object-contain" />
+            <img src={logoImg} alt="Nashik Property Logo" className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">

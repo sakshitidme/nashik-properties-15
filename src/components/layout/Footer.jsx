@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Building, MapPin, Phone, Mail, ArrowRight, ShieldCheck, Heart, MessageSquare } from 'lucide-react';
 import { NASHIK_LOCATIONS } from '../../data/mockData';
+import logoImg from '../../assets/logo.jpeg';
 
 export const Footer = () => {
   return (
@@ -17,7 +18,7 @@ export const Footer = () => {
           <div className="lg:col-span-2 space-y-5">
             <Link to="/" className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-amber-500/25 bg-slate-950 border border-amber-500/40 p-0.5">
-                <img src="/favicon.svg" alt="Nashik Property Logo" className="w-full h-full object-contain" />
+                <img src={logoImg} alt="Nashik Property Logo" className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-white">
